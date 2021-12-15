@@ -6,10 +6,18 @@
 #include "string"
 
 
-int main() {
-    std::cout << "Input talkers count:";
-    std::cin >> Talker::talker_count_;
-    for (int i = 0; i < Talker::talker_count_; ++i) {
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Incorrect input!");
+        return 0;
+    }
+    int talker_count_ = 0;
+    talker_count_ = atoi(argv[1]);
+    if (talker_count_ == 0) {
+        printf("Incorrect input!");
+        return 0;
+    }
+    for (int i = 0; i < talker_count_; ++i) {
         Talker *newTalker = new Talker("talker-" + std::to_string(i));
         Talker::telephone_book_->push_back(newTalker);
     }

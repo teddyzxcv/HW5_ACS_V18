@@ -16,8 +16,6 @@ class Talker {
 public:
     Talker(std::string name);
 
-    static int talker_count_;
-
     static pthread_mutex_t mutex;
 
     pthread_mutex_t object_mutex;

@@ -10,8 +10,6 @@ pthread_mutex_t Talker::mutex = PTHREAD_MUTEX_INITIALIZER;
 
 std::list<Talker *> *Talker::telephone_book_ = new std::list<Talker *>();
 
-int Talker::talker_count_ = 0;
-
 Talker::Talker(std::string name) {
     this->object_mutex = PTHREAD_MUTEX_INITIALIZER;
     this->is_talking_ = false;
@@ -55,6 +53,7 @@ bool Talker::isAvailable() {
 }
 
 void *Talker::printList(void *arg) {
+    printf("List all talkers and their info: \n");
     pthread_mutex_lock(&mutex);
     for (Talker *talker: *telephone_book_) {
         printf("%s : call taken: %d, is available: %d, is waiting: %d, is talking: %d\n", talker->name_.c_str(),
@@ -80,7 +79,7 @@ void *Talker::talk(void *arg) {
     pthread_mutex_lock(&(call->caller->object_mutex));
     pthread_mutex_lock(&(call->receiver->object_mutex));
     int current_call = Call::call_count_++;
-    printf("Start call number %d, from %s to %s\n", current_call, call->caller->name_.c_str(),
+    printf("Call<%d> => Start call, from %s to %s\n", current_call, call->caller->name_.c_str(),
            call->receiver->name_.c_str());
     pthread_mutex_unlock(&(call->caller->object_mutex));
     pthread_mutex_unlock(&(call->receiver->object_mutex));
@@ -90,15 +89,15 @@ void *Talker::talk(void *arg) {
     pthread_mutex_lock(&(call->receiver->object_mutex));
     call->caller->is_talking_ = false;
     call->receiver->is_talking_ = false;
-    printf("End call, %d sec, call number %d\n", time, current_call);
-    if (rand() & 1) {
+    printf("Call<%d> => End call, duration: %d sec\n", current_call, time);
+    if (rand() % 2) {
         call->caller->is_waiting_ = false;
         createWaitThread(call->caller);
     } else {
         call->caller->is_waiting_ = true;
         createWaitThread(call->caller);
     }
-    if (rand() & 1) {
+    if (rand() % 2) {
         call->receiver->is_waiting_ = false;
         createWaitThread(call->receiver);
     } else {
