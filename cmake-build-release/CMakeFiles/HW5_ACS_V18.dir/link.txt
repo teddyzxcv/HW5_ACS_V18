@@ -1,0 +1,1 @@
+/usr/bin/c++ -pthread -O3 -DNDEBUG -rdynamic CMakeFiles/HW5_ACS_V18.dir/main.cpp.o CMakeFiles/HW5_ACS_V18.dir/Talker.cpp.o CMakeFiles/HW5_ACS_V18.dir/Call.cpp.o -o HW5_ACS_V18 
