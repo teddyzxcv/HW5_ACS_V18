@@ -8,11 +8,13 @@ int Call::call_count_ = 0;
 
 std::queue<pthread_t> *Call::calls_queue = new std::queue<pthread_t>();
 
+// Constructor.
 Call::Call(Talker *talker_1, Talker *talker_2) {
     this->caller = talker_1;
     this->receiver = talker_2;
 }
 
+// Rethink function for thread.
 void *Call::waitToRethink(void *arg) {
     Talker *talker = (Talker *) arg;
     pthread_mutex_lock(&(talker->object_mutex));

@@ -21,12 +21,15 @@ int main(int argc, char *argv[]) {
         Talker *newTalker = new Talker("talker-" + std::to_string(i));
         Talker::telephone_book_->push_back(newTalker);
     }
+    // Print the talkers.
     Talker::printList(NULL);
+    // Make initial call.
     for (Talker *caller: *Talker::telephone_book_) {
         if (!caller->is_talking_ && !caller->is_waiting_ && caller->isAvailable()) {
             Talker::call(caller);
         }
     }
+    // Join all thread.
     while (!Call::calls_queue->empty()) {
         void *is_run;
         pthread_mutex_lock(&(Talker::mutex));

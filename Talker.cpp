@@ -10,6 +10,7 @@ pthread_mutex_t Talker::mutex = PTHREAD_MUTEX_INITIALIZER;
 
 std::list<Talker *> *Talker::telephone_book_ = new std::list<Talker *>();
 
+// Constructor.
 Talker::Talker(std::string name) {
     this->object_mutex = PTHREAD_MUTEX_INITIALIZER;
     this->is_talking_ = false;
@@ -22,6 +23,7 @@ Talker::Talker(std::string name) {
     }
 }
 
+// Start the call (create a thread).
 void Talker::call(Talker *caller) {
     for (Talker *receiver: *telephone_book_) {
         pthread_mutex_lock(&mutex);
@@ -47,11 +49,13 @@ void Talker::call(Talker *caller) {
     }
 }
 
+// Check is talker is available (talked 5 times?)
 bool Talker::isAvailable() {
     bool is_available = this->take_call_count_ < 5;
     return is_available;
 }
 
+// Print the list of talkers.
 void *Talker::printList(void *arg) {
     printf("List all talkers and their info: \n");
     pthread_mutex_lock(&mutex);
@@ -65,6 +69,7 @@ void *Talker::printList(void *arg) {
     return nullptr;
 }
 
+// Create wait thread to rethink the status.
 void Talker::createWaitThread(Talker *talker) {
     pthread_mutex_unlock(&(talker->object_mutex));
     pthread_t wait_thread;
@@ -74,6 +79,7 @@ void Talker::createWaitThread(Talker *talker) {
     pthread_mutex_unlock(&(talker->object_mutex));
 }
 
+// Start talk.
 void *Talker::talk(void *arg) {
     Call *call = (Call *) arg;
     pthread_mutex_lock(&(call->caller->object_mutex));
